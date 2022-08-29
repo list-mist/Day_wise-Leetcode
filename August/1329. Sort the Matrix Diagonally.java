@@ -1,27 +1,31 @@
 class Solution {
     public int[][] diagonalSort(int[][] mat) {
-        // Store the matrix dimensions
-        int m = mat.length;
-        int n = mat[0].length;
+       HashMap<Integer,List<Integer>> map = new HashMap<>();
+       int rows = mat.length, cols = mat[0].length;
         
-        // Data structure to store the diagonals.
-        Map<Integer, Queue<Integer>> diagonals = new HashMap<>();
+       for(int i = 0; i < rows; i++){
+           int diff = 0;
+           List<Integer> c = new ArrayList<>();
+           for(int j = 0; j < cols; j++){
+                diff = (i - j);
+                c = map.getOrDefault(diff + cols, new ArrayList<>());
+               
+                c.add(mat[i][j]);
+                Collections.sort(c);
+               
+                map.put(diff + cols, c);
+           }
+           
+          
+       }
         
-        // Insert values into the HashMap.
-        for (int row = 0; row < m; row++) {
-            for (int col = 0; col < n; col++) { 
-                diagonals.putIfAbsent(row - col, new PriorityQueue<>());
-                diagonals.get(row - col).add(mat[row][col]);
-            }   
-        }
-
-        // Take values back out of the HashMap.
-        for (int row = 0; row < m; row++) {
-            for (int col = 0; col < n; col++) {
-                mat[row][col] = diagonals.get(row - col).remove();
-            }
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                mat[i][j] = map.get(i - j + cols).remove(0);
+            } 
         }
         
         return mat;
     }
+    
 }
